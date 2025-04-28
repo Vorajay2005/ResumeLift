@@ -56,7 +56,7 @@ export default function App() {
       setLoading(true);
       setSuccess(false);
       const response = await axios.post(
-        "http://127.0.0.1:8000/analyze_resume/",
+        "https://resumelift-backend.onrender.com/analyze_resume/",
         formData,
         {
           headers: {
