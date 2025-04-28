@@ -103,8 +103,8 @@ If the resume is already strong, suggest only minor improvements (e.g., formatti
             messages=[{"role": "user", "content": prompt}],
             temperature=0.3,
         )
-
-        return {"result": response.choices[0].message.content}
+        result_text = response.choices[0].message.content
+        return {"result": result_text}
 
     except Exception as e:
         return {"error": str(e)}
