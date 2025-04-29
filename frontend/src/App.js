@@ -57,7 +57,7 @@ export default function App() {
       console.log("Sending request to backend...");
       
       const response = await fetch(
-        "https://resumelift-backend.onrender.com",
+        "https://resumelift-backend.onrender.com/analyze_resume/",
         {
           method: "POST",
           body: formData,
