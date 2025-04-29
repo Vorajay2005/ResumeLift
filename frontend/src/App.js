@@ -10,7 +10,6 @@ export default function App() {
   const [uploadError, setUploadError] = useState("");
   const [copySuccess, setCopySuccess] = useState("");
   const [saveSuccess, setSaveSuccess] = useState("");
-  const [debugInfo, setDebugInfo] = useState("");
 
   // Color palette
   const colors = {
@@ -48,7 +47,6 @@ export default function App() {
     }
 
     setUploadError("");
-    setDebugInfo(""); // Clear previous debug info
     const formData = new FormData();
     formData.append("file", file);
     formData.append("job_description", jobDescription);
@@ -56,30 +54,8 @@ export default function App() {
     try {
       setLoading(true);
       setSuccess(false);
+      console.log("Sending request to backend...");
       
-      // Log what we're sending
-      setDebugInfo(prev => prev + "Preparing to send request...\n");
-      setDebugInfo(prev => prev + `File: ${file.name} (${file.type}), size: ${file.size} bytes\n`);
-      
-      // Testing if the API is responsive before sending the full request
-      try {
-        const pingResponse = await fetch(
-          "https://resumelift-backend.onrender.com/",
-          { method: "GET" }
-        );
-        
-        if (!pingResponse.ok) {
-          setDebugInfo(prev => prev + `API ping failed with status: ${pingResponse.status}\n`);
-          throw new Error("API server is not responding correctly. Please try again later.");
-        }
-        
-        setDebugInfo(prev => prev + "API server is responsive, sending analysis request...\n");
-      } catch (pingError) {
-        setDebugInfo(prev => prev + `Error pinging API: ${pingError.message}\n`);
-        throw new Error("Could not connect to the backend server. Please check your internet connection or try again later.");
-      }
-      
-      // Sending the actual request
       const response = await fetch(
         "https://resumelift-backend.onrender.com/analyze_resume/",
         {
@@ -88,13 +64,12 @@ export default function App() {
         }
       );
       
-      setDebugInfo(prev => prev + `Response status: ${response.status}\n`);
-      
+      console.log("Response status:", response.status);
       const data = await response.json();
-      setDebugInfo(prev => prev + `Response received: ${JSON.stringify(data).substring(0, 100)}...\n`);
+      console.log("Response data:", data);
       
       if (!response.ok) {
-        throw new Error(data.error || data.detail || `Server error: ${response.status}`);
+        throw new Error(data.error || data.detail || "Unknown server error");
       }
       
       if (data.error) {
@@ -104,14 +79,12 @@ export default function App() {
       if (data.result) {
         setResult(data.result);
         setSuccess(true);
-        setDebugInfo(prev => prev + "Analysis completed successfully!\n");
       } else {
         throw new Error("No result received from the server");
       }
     } catch (error) {
       console.error("Error processing resume:", error);
       setUploadError(`Error: ${error.message || "Failed to process your resume. Please try again."}`);
-      setDebugInfo(prev => prev + `Error occurred: ${error.message}\n`);
     } finally {
       setLoading(false);
     }
@@ -448,36 +421,6 @@ export default function App() {
                 {loading ? "Analyzing..." : "Analyze Resume"}
               </button>
             </div>
-            
-            {/* Debug Section - Collapsible */}
-            {debugInfo && (
-              <div style={{ marginTop: "20px" }}>
-                <details>
-                  <summary style={{ 
-                    cursor: "pointer", 
-                    color: colors.primary,
-                    fontWeight: "600",
-                    fontSize: "14px",
-                    padding: "8px 0"
-                  }}>
-                    Debug Information
-                  </summary>
-                  <div style={{
-                    padding: "12px",
-                    backgroundColor: "#f8f9fa",
-                    borderRadius: "6px",
-                    border: "1px solid #e0e0e0",
-                    fontSize: "12px",
-                    fontFamily: "monospace",
-                    whiteSpace: "pre-wrap",
-                    maxHeight: "200px",
-                    overflowY: "auto"
-                  }}>
-                    {debugInfo}
-                  </div>
-                </details>
-              </div>
-            )}
           </div>
 
           {/* Right column - Results */}
