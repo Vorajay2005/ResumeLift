@@ -55,27 +55,24 @@ export default function App() {
       setLoading(true);
       setSuccess(false);
       console.log("Sending request to backend...");
-      
-      const response = await fetch(
-        "https://resumelift-backend.onrender.com/analyze_resume/",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      
+
+      const response = await fetch("http://localhost:8000/analyze_resume/", {
+        method: "POST",
+        body: formData,
+      });
+
       console.log("Response status:", response.status);
       const data = await response.json();
       console.log("Response data:", data);
-      
+
       if (!response.ok) {
         throw new Error(data.error || data.detail || "Unknown server error");
       }
-      
+
       if (data.error) {
         throw new Error(data.error);
       }
-      
+
       if (data.result) {
         setResult(data.result);
         setSuccess(true);
@@ -84,7 +81,11 @@ export default function App() {
       }
     } catch (error) {
       console.error("Error processing resume:", error);
-      setUploadError(`Error: ${error.message || "Failed to process your resume. Please try again."}`);
+      setUploadError(
+        `Error: ${
+          error.message || "Failed to process your resume. Please try again."
+        }`
+      );
     } finally {
       setLoading(false);
     }
@@ -540,7 +541,7 @@ export default function App() {
                       whiteSpace: "pre-wrap",
                       boxShadow: "0 2px 4px rgba(0,0,0,0.03)",
                       maxHeight: "500px",
-                      overflowY: "auto"
+                      overflowY: "auto",
                     }}
                   >
                     {result}
