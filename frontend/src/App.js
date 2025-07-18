@@ -65,10 +65,17 @@ export default function App() {
         process.env.REACT_APP_API_URL
       );
 
+      // Add timeout for the main request (60 seconds for AI processing)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+
       const response = await fetch(`${API_BASE_URL}/analyze_resume/`, {
         method: "POST",
         body: formData,
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       console.log("Response status:", response.status);
       const data = await response.json();
@@ -90,11 +97,20 @@ export default function App() {
       }
     } catch (error) {
       console.error("Error processing resume:", error);
-      setUploadError(
-        `Error: ${
-          error.message || "Failed to process your resume. Please try again."
-        }`
-      );
+
+      let errorMessage = "Failed to process your resume. Please try again.";
+
+      if (error.name === "AbortError") {
+        errorMessage =
+          "Request timeout. The backend might be sleeping. Please wait 30 seconds and try again.";
+      } else if (error.message.includes("Failed to fetch")) {
+        errorMessage =
+          "Connection error. Backend might be sleeping or unreachable. Please wait 30 seconds and try again.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      setUploadError(`Error: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
@@ -124,13 +140,39 @@ export default function App() {
 
     try {
       console.log("Testing connection to:", API_BASE_URL);
-      const response = await fetch(`${API_BASE_URL}/`);
+
+      // Add timeout and better error handling
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+      const response = await fetch(`${API_BASE_URL}/`, {
+        method: "GET",
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
       console.log("Connection test result:", data);
-      alert(`Connection successful! Backend says: ${data.message}`);
+      alert(`✅ Connection successful! Backend says: ${data.message}`);
     } catch (error) {
       console.error("Connection test failed:", error);
-      alert(`Connection failed: ${error.message}`);
+      if (error.name === "AbortError") {
+        alert(
+          `❌ Connection timeout: Backend might be sleeping. Please wait 30 seconds and try again.`
+        );
+      } else {
+        alert(
+          `❌ Connection failed: ${error.message}\n\nThis might be because:\n1. Backend is sleeping (wait 30 seconds)\n2. CORS issue\n3. Network problem`
+        );
+      }
     }
   };
 
