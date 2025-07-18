@@ -65,6 +65,16 @@ export default function App() {
         process.env.REACT_APP_API_URL
       );
 
+      // First, try to wake up the backend
+      console.log("Checking if backend is awake...");
+      const isAwake = await wakeUpBackend(API_BASE_URL);
+
+      if (!isAwake) {
+        throw new Error(
+          "Backend is not responding. Please try again in a few moments."
+        );
+      }
+
       // Add timeout for the main request (60 seconds for AI processing)
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 60000);
@@ -129,6 +139,35 @@ export default function App() {
     } catch (err) {
       setCopySuccess("Failed to copy");
       console.error("Failed to copy text: ", err);
+    }
+  };
+
+  // Wake up backend function
+  const wakeUpBackend = async (API_BASE_URL) => {
+    try {
+      console.log("Waking up backend...");
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 45000); // 45 second timeout
+
+      const response = await fetch(`${API_BASE_URL}/`, {
+        method: "GET",
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Backend is awake:", data.message);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log("Backend wake-up failed:", error.message);
+      return false;
     }
   };
 
@@ -488,7 +527,9 @@ export default function App() {
                     : "0 4px 10px rgba(46,204,113,0.3)",
                 }}
               >
-                {loading ? "Analyzing..." : "Analyze Resume"}
+                {loading
+                  ? "Waking up backend & analyzing..."
+                  : "Analyze Resume"}
               </button>
 
               {/* Test Connection Button */}
