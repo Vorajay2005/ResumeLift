@@ -2,10 +2,15 @@
 
 An AI-powered resume analyzer that helps you optimize your resume for specific job descriptions using OpenAI's GPT technology.
 
+## 🌐 Live Demo
+
+**Try it now:** [https://resume-lift.vercel.app/](https://resume-lift.vercel.app/)
+
 ![ResumeLift](https://img.shields.io/badge/ResumeLift-AI%20Resume%20Analyzer-blue)
 ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688?logo=fastapi)
 ![OpenAI](https://img.shields.io/badge/OpenAI-GPT--3.5--turbo-412991?logo=openai)
+![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel)
 
 ## ✨ Features
 
@@ -49,9 +54,11 @@ An AI-powered resume analyzer that helps you optimize your resume for specific j
 1. **Clone the repository**
 
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/yourusername/ResumeLift.git
    cd ResumeLift
    ```
+
+   _Replace `yourusername` with your actual GitHub username_
 
 2. **Set up the Backend**
 
