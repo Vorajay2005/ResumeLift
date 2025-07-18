@@ -183,15 +183,41 @@ Analyzes a resume against a job description.
 
 ### Backend Deployment
 
-- Can be deployed to platforms like Heroku, Railway, or Render
-- Ensure environment variables are set in your deployment platform
-- Use `uvicorn app.main:app --host 0.0.0.0 --port $PORT` for production
+**Railway (Recommended)**
+
+1. Create account at [railway.app](https://railway.app)
+2. Connect your GitHub repository
+3. Deploy the `backend` folder
+4. Set environment variable: `OPENAI_API_KEY=your_api_key_here`
+5. Copy the deployed URL
+
+**Render**
+
+1. Create account at [render.com](https://render.com)
+2. Create new Web Service from GitHub
+3. Set build command: `cd backend && pip install -r requirements.txt`
+4. Set start command: `cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Add environment variable: `OPENAI_API_KEY=your_api_key_here`
+
+**Heroku**
+
+1. Install Heroku CLI
+2. Use the included `Procfile` in the backend directory
+3. Set environment variable: `heroku config:set OPENAI_API_KEY=your_api_key_here`
 
 ### Frontend Deployment
 
-- Build the production version: `npm run build`
-- Deploy to platforms like Netlify, Vercel, or GitHub Pages
-- Update the API URL to point to your deployed backend
+**Vercel (Current)**
+
+1. Build the production version: `npm run build`
+2. Deploy to Vercel
+3. Set environment variable in Vercel dashboard:
+   - `REACT_APP_API_URL=https://your-backend-url.com`
+
+**Environment Configuration**
+
+- Development: Uses `http://localhost:8000` (automatic)
+- Production: Set `REACT_APP_API_URL` to your deployed backend URL
 
 ## 🤝 Contributing
 

@@ -54,9 +54,18 @@ export default function App() {
     try {
       setLoading(true);
       setSuccess(false);
-      console.log("Sending request to backend...");
+      // Use environment variable for API URL, fallback to deployed backend
+      const API_BASE_URL =
+        process.env.REACT_APP_API_URL ||
+        "https://resumelift-backend.onrender.com";
 
-      const response = await fetch("http://localhost:8000/analyze_resume/", {
+      console.log("Sending request to backend:", API_BASE_URL);
+      console.log(
+        "Environment variable REACT_APP_API_URL:",
+        process.env.REACT_APP_API_URL
+      );
+
+      const response = await fetch(`${API_BASE_URL}/analyze_resume/`, {
         method: "POST",
         body: formData,
       });
@@ -104,6 +113,24 @@ export default function App() {
     } catch (err) {
       setCopySuccess("Failed to copy");
       console.error("Failed to copy text: ", err);
+    }
+  };
+
+  // Test Backend Connection function
+  const testConnection = async () => {
+    const API_BASE_URL =
+      process.env.REACT_APP_API_URL ||
+      "https://resumelift-backend.onrender.com";
+
+    try {
+      console.log("Testing connection to:", API_BASE_URL);
+      const response = await fetch(`${API_BASE_URL}/`);
+      const data = await response.json();
+      console.log("Connection test result:", data);
+      alert(`Connection successful! Backend says: ${data.message}`);
+    } catch (error) {
+      console.error("Connection test failed:", error);
+      alert(`Connection failed: ${error.message}`);
     }
   };
 
@@ -420,6 +447,32 @@ export default function App() {
                 }}
               >
                 {loading ? "Analyzing..." : "Analyze Resume"}
+              </button>
+
+              {/* Test Connection Button */}
+              <button
+                onClick={testConnection}
+                disabled={loading}
+                style={{
+                  padding: "10px 20px",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  background: loading
+                    ? "#95a5a6"
+                    : `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primary}dd 100%)`,
+                  color: "white",
+                  border: "none",
+                  borderRadius: "6px",
+                  transition: "all 0.3s ease",
+                  width: "100%",
+                  marginTop: "10px",
+                  boxShadow: loading
+                    ? "none"
+                    : "0 2px 6px rgba(52,152,219,0.3)",
+                }}
+              >
+                Test Backend Connection
               </button>
             </div>
           </div>
