@@ -1,0 +1,12 @@
+{
+  "name": "resumelift",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd frontend && npm ci && npm run build",
+    "dev": "cd frontend && npm start",
+    "install-deps": "cd frontend && npm install"
+  },
+  "workspaces": [
+    "frontend"
+  ]
+}

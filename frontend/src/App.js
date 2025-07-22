@@ -54,10 +54,8 @@ export default function App() {
     try {
       setLoading(true);
       setSuccess(false);
-      // Use environment variable for API URL, fallback to deployed backend
-      const API_BASE_URL =
-        process.env.REACT_APP_API_URL ||
-        "https://resumelift-backend.onrender.com";
+      // Use environment variable for API URL, fallback to Vercel API
+      const API_BASE_URL = process.env.REACT_APP_API_URL || "/api";
 
       console.log("Sending request to backend:", API_BASE_URL);
       console.log(
@@ -173,9 +171,7 @@ export default function App() {
 
   // Test Backend Connection function
   const testConnection = async () => {
-    const API_BASE_URL =
-      process.env.REACT_APP_API_URL ||
-      "https://resumelift-backend.onrender.com";
+    const API_BASE_URL = process.env.REACT_APP_API_URL || "/api";
 
     try {
       console.log("Testing connection to:", API_BASE_URL);
