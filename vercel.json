@@ -2,26 +2,18 @@
   "buildCommand": "cd frontend && npm ci && npm run build",
   "outputDirectory": "frontend/build",
   "installCommand": "npm install",
-  "functions": {
-    "api/index.py": {
-      "runtime": "@vercel/python"
-    },
-    "api/analyze.py": {
-      "runtime": "@vercel/python"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/analyze_resume/",
-      "destination": "/api/analyze.py"
+      "destination": "/api/analyze"
     },
     {
       "source": "/api",
-      "destination": "/api/index.py"
+      "destination": "/api/index"
     },
     {
       "source": "/api/",
-      "destination": "/api/index.py"
+      "destination": "/api/index"
     },
     {
       "source": "/((?!api/).*)",
