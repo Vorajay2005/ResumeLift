@@ -4,16 +4,20 @@
   "installCommand": "npm install",
   "rewrites": [
     {
-      "source": "/api/analyze_resume/",
-      "destination": "/api/analyze"
+      "source": "/api/analyze_resume/(.*)",
+      "destination": "/api/analyze.py"
+    },
+    {
+      "source": "/api/analyze_resume",
+      "destination": "/api/analyze.py"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
       "source": "/api",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/api/",
-      "destination": "/api/index"
+      "destination": "/api/index.py"
     },
     {
       "source": "/((?!api/).*)",
