@@ -238,13 +238,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - React team for the frontend library
 - All the open-source libraries that make this project possible
 
-## 📞 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](../../issues) page
-2. Create a new issue with detailed information
-3. Include error messages and steps to reproduce
 
 ---
 
